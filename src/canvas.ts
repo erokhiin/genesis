@@ -4,19 +4,19 @@ let ctx: CanvasRenderingContext2D
 let canvas: HTMLCanvasElement
 
 const dpi = window.devicePixelRatio || 1
-const width = window.innerWidth * dpi
-const height = window.innerHeight * dpi
+const width = window.innerWidth
+const height = window.innerHeight
 
 export function initCanvas() {
   canvas = document.getElementById('canvas') as HTMLCanvasElement
-  canvas.width = width
-  canvas.height = height
+  canvas.width = width * dpi
+  canvas.height = height * dpi
   ctx = canvas.getContext('2d') as CanvasRenderingContext2D
-  return { canvas, ctx }
+  return { width, height, canvas, ctx }
 }
 
 export function clear() {
-  ctx.clearRect(0, 0, width, height)
+  ctx.clearRect(0, 0, width * dpi, height * dpi)
 }
 
 export function drawDot(p: Vector, hue: number = 100) {

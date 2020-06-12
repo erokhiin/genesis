@@ -25,4 +25,28 @@ export class Body {
     this.pos.add(this.vel)
     this.acc = new Vector(0, 0)
   }
+
+  edges(x: number, y: number) {
+    const pos = this.pos
+    const vel = this.vel
+    if (pos.x > x) {
+      pos.x = x
+      vel.x *= -1
+    }
+
+    if (pos.x < 0) {
+      pos.x = 0
+      vel.x *= -1
+    }
+
+    if (pos.y > y) {
+      pos.y = y
+      vel.y *= -1
+    }
+
+    if (pos.y < 0) {
+      pos.y = 0
+      vel.y *= -1
+    }
+  }
 }
