@@ -23,7 +23,8 @@ async function init() {
     const { mouse, guy } = state
 
     // Calc acceleration
-    guy.acc = mouse.copy().sub(guy.pos).limit(0.3)
+    const guyMouseForce = mouse.copy().sub(guy.pos).limit(0.3)
+    guy.applyForce(guyMouseForce)
 
     // Physics Updates
     guy.update()
