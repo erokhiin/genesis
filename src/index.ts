@@ -23,9 +23,7 @@ async function init() {
     const { mouse, guy } = state
 
     // Calc acceleration
-    const path = mouse.copy().sub(guy.pos)
-    if (path.mag() > 0.3) path.setMag(0.3)
-    guy.acc = path
+    guy.acc = mouse.copy().sub(guy.pos).limit(0.3)
 
     // Physics Updates
     guy.update()
