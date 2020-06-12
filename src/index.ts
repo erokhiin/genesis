@@ -5,7 +5,7 @@ import { Vector } from './math/Vector'
 
 const state = {
   guy: new Body(new Vector(50, 50)),
-  mouse: new Vector(0, 0),
+  mouse: new Vector(100, 100),
 }
 
 async function init() {
