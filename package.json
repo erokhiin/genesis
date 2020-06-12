@@ -3,6 +3,9 @@
     "dev": "parcel src/index.html",
     "build": "parcel src/index.html"
   },
+  "browserslist": [
+    "last 1 Chrome versions"
+  ],
   "dependencies": {
     "@tensorflow/tfjs": "^2.0.0"
   },
