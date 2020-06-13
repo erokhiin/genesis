@@ -12,8 +12,9 @@ export class Population {
   state: State
 
   GUYS_COUNT = 500
-  EPOCHE_TIME = 3000
+  EPOCHE_TIME = 1500
 
+  isSelecting = true
   guys: Body[] = []
   epocheStart: number
 
@@ -21,6 +22,19 @@ export class Population {
     this.state = state
     this.populate()
     this.epocheStart = this.state.time
+
+    const btn = document.getElementById('toggle')
+    if (btn) {
+      btn.addEventListener('click', (e) => {
+        this.isSelecting = !this.isSelecting
+        btn.innerText = this.isSelecting ? 'Disable' : 'Enable'
+        this.endGeneration()
+        if (this.isSelecting) {
+          this.populate()
+          this.epocheStart = this.state.time
+        }
+      })
+    }
   }
 
   brandNewGuy() {
@@ -34,28 +48,25 @@ export class Population {
     }
   }
 
-  repopulate() {
+  endGeneration() {
     const { guys } = this
     const { mouse } = this.state
 
     const smartGuys: Body[] = []
-    {
-      let i = -1
-      const maxI = guys.length
-      while (++i < maxI) {
-        const guy = guys[i]
-        const wentPath = guy.pos.copy().sub(mouse).mag()
-        const wentCoeff = wentPath / guy.rememberedTargetRange
-        if (wentCoeff < 1.2) {
-          const child = guy.makeChild(getRandomPos(), mouse)
-          smartGuys.push(child)
-        }
-        guy.brain.dispose()
+    let i = -1
+    const maxI = guys.length
+    while (++i < maxI) {
+      const guy = guys[i]
+      const wentPath = guy.pos.copy().sub(mouse).mag()
+      const wentCoeff = wentPath / guy.rememberedTargetRange
+      if (wentCoeff < 1.2) {
+        const child = guy.makeChild(getRandomPos(), mouse)
+        smartGuys.push(child)
       }
+      guy.brain.dispose()
     }
 
     this.guys = smartGuys
-    this.populate()
   }
 
   update(timeCoeff: number) {
@@ -69,9 +80,10 @@ export class Population {
       guys[i].update(timeCoeff)
     }
 
-    if (time - epocheStart >= this.EPOCHE_TIME) {
+    if (this.isSelecting && time - epocheStart >= this.EPOCHE_TIME) {
       this.perfReport()
-      this.repopulate()
+      this.endGeneration()
+      this.populate()
       this.epocheStart = this.state.time
     }
   }

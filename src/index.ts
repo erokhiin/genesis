@@ -7,6 +7,10 @@ import './neural/brain'
 async function init() {
   initCanvas()
   const state = new State()
+  // window.addEventListener('mousemove', (e) => {
+  //   state.mouse.x = e.clientX
+  //   state.mouse.y = e.clientY
+  // })
   function loop() {
     window.requestAnimationFrame(loop)
     state.update()
