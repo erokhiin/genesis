@@ -32,3 +32,10 @@ export function drawProgress(prog: number) {
   ctx.rect(0, 0, width * dpi * prog, 3 * dpi)
   ctx.fill()
 }
+
+export function drawZone(r: number) {
+  ctx.strokeStyle = 'rgba(0,0,0,0.15)'
+  ctx.beginPath()
+  ctx.arc((width * dpi) / 2, (height * dpi) / 2, r, 0, Math.PI * 2, true)
+  ctx.stroke()
+}

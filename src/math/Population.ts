@@ -1,18 +1,21 @@
 import * as tf from '@tensorflow/tfjs'
 import { Body } from './Body'
 import { Vector } from './Vector'
-import { drawProgress, width, height } from '../graphics/canvas'
+import { drawProgress, drawZone, width, height } from '../graphics/canvas'
 import type { State } from './State'
 import { random } from '../utils'
 
 const getRandomPos = () =>
   new Vector(random(100, width - 100), random(100, height - 100))
 
+const diagonale = new Vector(width, height)
+const safeZone = diagonale.mag() * 0.25
+
 export class Population {
   state: State
 
-  GUYS_COUNT = 500
-  EPOCHE_TIME = 5000
+  GUYS_COUNT = 400
+  EPOCHE_TIME = 3000
 
   isSelecting = true
   guys: Body[] = []
@@ -57,9 +60,10 @@ export class Population {
     const maxI = guys.length
     while (++i < maxI) {
       const guy = guys[i]
+
       const wentPath = guy.pos.copy().sub(mouse).mag()
       const wentCoeff = wentPath / guy.rememberedTargetRange
-      if (wentCoeff < 1.2) {
+      if (wentCoeff < 1.2 || wentPath < safeZone) {
         const child = guy.makeChild(getRandomPos(), mouse)
         smartGuys.push(child)
       }
@@ -97,6 +101,7 @@ export class Population {
       guys[i].draw()
     }
     drawProgress((time - epocheStart) / this.EPOCHE_TIME)
+    drawZone(safeZone)
   }
 
   perfReport() {

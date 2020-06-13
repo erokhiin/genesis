@@ -49,7 +49,7 @@ export class Body {
 
   update(timeCoeff: number) {
     this.vel.add(this.acc.copy().mult(timeCoeff))
-    this.pos.add(this.vel.copy().mult(timeCoeff).limit(6))
+    this.pos.add(this.vel.copy().mult(timeCoeff).limit(10))
     this.acc.setMag(0)
   }
 
