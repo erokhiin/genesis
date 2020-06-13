@@ -12,7 +12,7 @@ export class Population {
   state: State
 
   GUYS_COUNT = 500
-  EPOCHE_TIME = 1500
+  EPOCHE_TIME = 5000
 
   isSelecting = true
   guys: Body[] = []

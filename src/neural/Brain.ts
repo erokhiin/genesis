@@ -50,7 +50,7 @@ export class Brain {
 
   copy() {
     const modelCopy = this.createModel()
-    const newWeights = tf.tidy(() => {
+    tf.tidy(() => {
       const weights = this.model.getWeights()
       const weightCopies = []
       let i = -1
@@ -58,9 +58,9 @@ export class Brain {
       while (++i < maxI) {
         weightCopies[i] = weights[i].clone()
       }
-      return weightCopies
+      weightCopies
+      modelCopy.setWeights(weightCopies)
     })
-    modelCopy.setWeights(newWeights)
     return new Brain({ model: modelCopy })
   }
 
