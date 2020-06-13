@@ -2,7 +2,7 @@ import * as tf from '@tensorflow/tfjs'
 import { Vector } from '../math/Vector'
 import { random } from '../utils'
 
-// tf.setBackend('cpu')
+tf.setBackend('cpu')
 
 const MUTATION_RATE = 0.1
 
