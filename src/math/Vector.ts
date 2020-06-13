@@ -56,4 +56,8 @@ export class Vector {
     if (this.mag() > val) this.setMag(val)
     return this
   }
+
+  toArr(): [number, number] {
+    return [this.x, this.y]
+  }
 }

@@ -1,11 +1,11 @@
-import { Vector } from './math/Vector'
+import { Vector } from '../math/Vector'
 
 let ctx: CanvasRenderingContext2D
 let canvas: HTMLCanvasElement
 
 const dpi = window.devicePixelRatio || 1
-const width = window.innerWidth
-const height = window.innerHeight
+export const width = window.innerWidth
+export const height = window.innerHeight
 
 export function initCanvas() {
   canvas = document.getElementById('canvas') as HTMLCanvasElement
@@ -19,9 +19,16 @@ export function clear() {
   ctx.clearRect(0, 0, width * dpi, height * dpi)
 }
 
-export function drawDot(p: Vector, hue: number = 100) {
-  ctx.fillStyle = `hsl(${(hue % 310) + 1}, 70%, 60%)`
+export function drawDot(p: Vector, hue: number = 100, size: number = 6) {
+  ctx.fillStyle = `hsl(${(hue % 360) + 1}, 70%, 60%)`
   ctx.beginPath()
-  ctx.arc(p.x * dpi, p.y * dpi, 20, 0, Math.PI * 2, true)
+  ctx.arc(p.x * dpi, p.y * dpi, size, 0, Math.PI * 2, true)
+  ctx.fill()
+}
+
+export function drawProgress(prog: number) {
+  ctx.fillStyle = `#99f`
+  ctx.beginPath()
+  ctx.rect(0, 0, width * dpi * prog, 3 * dpi)
   ctx.fill()
 }

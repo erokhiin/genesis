@@ -10,4 +10,4 @@ export const sqr = (x: number) => x * x
 //   minmax(0, normalize(start, end, value), 1)
 
 export const random = (min: number, max: number) =>
-  Math.random() * (max - min) + min
+  Math.floor(Math.random() * (max - min + 1)) + min
