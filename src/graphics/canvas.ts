@@ -33,9 +33,9 @@ export function drawProgress(prog: number) {
   ctx.fill()
 }
 
-export function drawZone(r: number) {
+export function drawZone(center: Vector, r: number) {
   ctx.strokeStyle = 'rgba(0,0,0,0.15)'
   ctx.beginPath()
-  ctx.arc((width * dpi) / 2, (height * dpi) / 2, r, 0, Math.PI * 2, true)
+  ctx.arc(center.x * dpi, center.y * dpi, r, 0, Math.PI * 2, true)
   ctx.stroke()
 }

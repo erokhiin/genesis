@@ -7,8 +7,11 @@ export class Body {
   pos: Vector
   vel: Vector
   brain: Brain
-  rememberedTargetRange: number
   generation = 0
+
+  positiveMemory: number = 0
+  negativeMemory: number = 0
+  rememberedRangeToTarget: number
 
   constructor({
     pos,
@@ -23,11 +26,20 @@ export class Body {
     this.acc = new Vector(0, 0)
     this.vel = new Vector(0, 0)
     this.brain = brain || new Brain()
-    if (target) this.rememberTargetRange(target)
+    if (target) this.rememberRangeToTarget(target)
   }
 
-  rememberTargetRange(target: Vector) {
-    this.rememberedTargetRange = target.copy().sub(this.pos).mag()
+  rememberRangeToTarget(target: Vector) {
+    const nextRange = target.copy().sub(this.pos).mag()
+    if (this.rememberedRangeToTarget !== undefined) {
+      const rangeDiff = nextRange - this.rememberedRangeToTarget
+      if (rangeDiff < 0) {
+        this.positiveMemory += Math.abs(rangeDiff)
+      } else {
+        this.negativeMemory += Math.abs(rangeDiff)
+      }
+    }
+    this.rememberedRangeToTarget = nextRange
   }
 
   makeChild(pos: Vector, target: Vector) {
@@ -55,9 +67,7 @@ export class Body {
 
   goTo(target: Vector) {
     const targetRelative = target.copy().sub(this.pos)
-
     const force = this.brain.predict([targetRelative.toArr(), this.vel.toArr()])
-
     this.applyForce(force)
   }
 

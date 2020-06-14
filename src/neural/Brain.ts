@@ -45,10 +45,11 @@ export class Brain {
       return output.dataSync()
     })
     const [xVal, xDir, yVal, yDir] = data
-    const xDirDoubled = 2 * xDir
-    const yDirDoubled = 2 * yDir
-    const x = xVal * ((xDirDoubled - 1) / xDirDoubled)
-    const y = yVal * ((yDirDoubled - 1) / yDirDoubled)
+    const xDirDoubled = (xDir - 0.5) / Math.abs(xDir - 0.5)
+    const yDirDoubled = (yDir - 0.5) / Math.abs(yDir - 0.5)
+
+    const x = xVal * xDirDoubled
+    const y = yVal * yDirDoubled
     return new Vector(x, y)
   }
 

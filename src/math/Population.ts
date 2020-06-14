@@ -9,12 +9,12 @@ const getRandomPos = () =>
   new Vector(random(100, width - 100), random(100, height - 100))
 
 const diagonale = new Vector(width, height)
-const safeZone = diagonale.mag() * 0.25
+const safeZone = diagonale.mag() * 0.15
 
 export class Population {
   state: State
 
-  GUYS_COUNT = 400
+  GUYS_COUNT = 600
   EPOCHE_TIME = 6000
 
   isSelecting = true
@@ -31,6 +31,7 @@ export class Population {
       btn.addEventListener('click', (e) => {
         this.isSelecting = !this.isSelecting
         btn.innerText = this.isSelecting ? 'Disable' : 'Enable'
+        state.mouse = new Vector(width / 2, height / 2)
         this.endGeneration()
         if (this.isSelecting) {
           this.populate()
@@ -38,6 +39,10 @@ export class Population {
         }
       })
     }
+  }
+
+  get scaledEpocheTime() {
+    return this.EPOCHE_TIME / this.state.timeScale
   }
 
   brandNewGuy() {
@@ -60,10 +65,8 @@ export class Population {
     const maxI = guys.length
     while (++i < maxI) {
       const guy = guys[i]
-
-      const wentPath = guy.pos.copy().sub(mouse).mag()
-      const wentCoeff = wentPath / guy.rememberedTargetRange
-      if (wentCoeff < 1.2 || wentPath < safeZone) {
+      const rangeToTarget = guy.pos.copy().sub(mouse).mag()
+      if (guy.positiveMemory > guy.negativeMemory || rangeToTarget < safeZone) {
         const child = guy.makeChild(getRandomPos(), mouse)
         smartGuys.push(child)
       }
@@ -82,9 +85,10 @@ export class Population {
     while (++i < maxI) {
       guys[i].goTo(mouse)
       guys[i].update(timeCoeff)
+      guys[i].rememberRangeToTarget(mouse)
     }
 
-    if (this.isSelecting && time - epocheStart >= this.EPOCHE_TIME) {
+    if (this.isSelecting && time - epocheStart >= this.scaledEpocheTime) {
       this.perfReport()
       this.endGeneration()
       this.populate()
@@ -94,14 +98,14 @@ export class Population {
 
   draw() {
     const { guys, epocheStart } = this
-    const { time } = this.state
+    const { time, mouse } = this.state
     let i = -1
     const maxI = guys.length
     while (++i < maxI) {
       guys[i].draw()
     }
-    drawProgress((time - epocheStart) / this.EPOCHE_TIME)
-    drawZone(safeZone)
+    drawProgress((time - epocheStart) / this.scaledEpocheTime)
+    drawZone(mouse, safeZone)
   }
 
   perfReport() {
