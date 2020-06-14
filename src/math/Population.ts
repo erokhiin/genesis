@@ -13,36 +13,22 @@ const safeZone = diagonale.mag() * 0.15
 
 export class Population {
   state: State
-
-  GUYS_COUNT = 600
-  EPOCHE_TIME = 6000
-
-  isSelecting = true
   guys: Body[] = []
   epocheStart: number
 
   constructor(state: State) {
     this.state = state
-    this.populate()
-    this.epocheStart = this.state.time
+    this.startGeneration()
+    // this.populate()
+    // this.epocheStart = this.state.time
+  }
 
-    const btn = document.getElementById('toggle')
-    if (btn) {
-      btn.addEventListener('click', (e) => {
-        this.isSelecting = !this.isSelecting
-        btn.innerText = this.isSelecting ? 'Disable' : 'Enable'
-        state.mouse = new Vector(width / 2, height / 2)
-        this.endGeneration()
-        if (this.isSelecting) {
-          this.populate()
-          this.epocheStart = this.state.time
-        }
-      })
-    }
+  get isSelecting() {
+    return this.state.params.isSelecting
   }
 
   get scaledEpocheTime() {
-    return this.EPOCHE_TIME / this.state.timeScale
+    return this.state.params.epocheTime / this.state.params.timeScale
   }
 
   brandNewGuy() {
@@ -54,9 +40,15 @@ export class Population {
   }
 
   populate() {
-    while (this.guys.length < this.GUYS_COUNT) {
+    const { guysCount } = this.state.params
+    while (this.guys.length < guysCount) {
       this.guys.push(this.brandNewGuy())
     }
+  }
+
+  startGeneration() {
+    this.populate()
+    this.epocheStart = this.state.time
   }
 
   endGeneration() {

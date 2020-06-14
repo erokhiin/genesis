@@ -1,0 +1,13 @@
+.canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.controls {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+}
+.control {
+  margin-bottom: 10px;
+}

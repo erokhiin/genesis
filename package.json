@@ -6,11 +6,31 @@
   "browserslist": [
     "last 1 Chrome versions"
   ],
+  "postcss": {
+    "modules": true,
+    "plugins": [
+      "postcss-nested"
+    ]
+  },
+  "babel": {
+    "plugins": [
+      "astroturf/plugin"
+    ]
+  },
   "dependencies": {
-    "@tensorflow/tfjs": "^2.0.0"
+    "@tensorflow/tfjs": "^2.0.0",
+    "astroturf": "^0.10.4",
+    "classnames": "^2.2.6",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.10.2",
+    "@types/classnames": "^2.2.10",
+    "@types/react": "^16.9.36",
+    "@types/react-dom": "^16.9.8",
     "parcel-bundler": "^1.12.4",
+    "postcss-modules": "^2.0.0",
     "prettier": "^2.0.5",
     "typescript": "^3.9.5"
   }

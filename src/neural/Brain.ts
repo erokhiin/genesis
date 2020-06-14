@@ -16,7 +16,7 @@ export class Brain {
   createModel() {
     const model = tf.sequential()
     const hidden = tf.layers.dense({
-      units: 8,
+      units: 4,
       inputShape: [2],
       activation: 'sigmoid',
     })
