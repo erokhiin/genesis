@@ -38,7 +38,7 @@ function App() {
       state.population.endGeneration()
     } else {
       state.population.startGeneration()
-      state.nextMouse = new Vector(width / 2, height / 2)
+      state.mouse = new Vector(width / 2, height / 2)
     }
     setParams({ isSelecting: !params.isSelecting })
   }, [setParams, params.isSelecting, stateRef.current])
