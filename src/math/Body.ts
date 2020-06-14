@@ -3,9 +3,9 @@ import { Brain } from '../neural/Brain'
 import { drawDot } from '../graphics/canvas'
 
 export class Body {
-  acc: Vector
-  pos: Vector
-  vel: Vector
+  acceleration: Vector
+  position: Vector
+  velocity: Vector
   brain: Brain
   generation = 0
 
@@ -14,23 +14,23 @@ export class Body {
   rememberedRangeToTarget: number
 
   constructor({
-    pos,
+    position,
     brain,
     target,
   }: {
-    pos: Vector
+    position: Vector
     brain?: Brain
     target?: Vector
   }) {
-    this.pos = pos
-    this.acc = new Vector(0, 0)
-    this.vel = new Vector(0, 0)
+    this.position = position
+    this.acceleration = new Vector(0, 0)
+    this.velocity = new Vector(0, 0)
     this.brain = brain || new Brain()
     if (target) this.rememberRangeToTarget(target)
   }
 
   rememberRangeToTarget(target: Vector) {
-    const nextRange = target.copy().sub(this.pos).mag()
+    const nextRange = target.copy().sub(this.position).mag()
     if (this.rememberedRangeToTarget !== undefined) {
       const rangeDiff = nextRange - this.rememberedRangeToTarget
       if (rangeDiff < 0) {
@@ -42,9 +42,9 @@ export class Body {
     this.rememberedRangeToTarget = nextRange
   }
 
-  makeChild(pos: Vector, target: Vector) {
+  makeChild(position: Vector, target: Vector) {
     const brain = this.brain.copy()
-    const child = new Body({ pos, brain, target })
+    const child = new Body({ position, brain, target })
     child.brain.mutate()
     child.generation = this.generation + 1
     return child
@@ -52,7 +52,7 @@ export class Body {
 
   applyForce(f: Vector) {
     // Accomulate force to acceleration
-    this.acc.add(
+    this.acceleration.add(
       f.copy(),
       // Applied force should be divided by mass of the object
       // .div(this.mass)
@@ -60,42 +60,45 @@ export class Body {
   }
 
   update(timeCoeff: number) {
-    this.vel.add(this.acc.copy().mult(timeCoeff)).limit(3)
-    this.pos.add(this.vel.copy().mult(timeCoeff))
-    this.acc.setMag(0)
+    this.velocity.add(this.acceleration.copy().mult(timeCoeff)).limit(3)
+    this.position.add(this.velocity.copy().mult(timeCoeff))
+    this.acceleration.setMag(0)
   }
 
   goTo(target: Vector) {
-    const targetRelative = target.copy().sub(this.pos)
-    const force = this.brain.predict([targetRelative.toArr(), this.vel.toArr()])
+    const targetRelative = target.copy().sub(this.position)
+    const force = this.brain.predict([
+      targetRelative.toArr(),
+      this.velocity.toArr(),
+    ])
     this.applyForce(force)
   }
 
   edges(x: number, y: number) {
-    const pos = this.pos
-    const vel = this.vel
-    if (pos.x > x) {
-      pos.x = x
-      vel.x *= -1
+    const position = this.position
+    const velocity = this.velocity
+    if (position.x > x) {
+      position.x = x
+      velocity.x *= -1
     }
 
-    if (pos.x < 0) {
-      pos.x = 0
-      vel.x *= -1
+    if (position.x < 0) {
+      position.x = 0
+      velocity.x *= -1
     }
 
-    if (pos.y > y) {
-      pos.y = y
-      vel.y *= -1
+    if (position.y > y) {
+      position.y = y
+      velocity.y *= -1
     }
 
-    if (pos.y < 0) {
-      pos.y = 0
-      vel.y *= -1
+    if (position.y < 0) {
+      position.y = 0
+      velocity.y *= -1
     }
   }
 
   draw() {
-    drawDot(this.pos, this.generation * 10, this.generation + 1)
+    drawDot(this.position, this.generation * 10, this.generation + 1)
   }
 }
