@@ -48,18 +48,15 @@ export class Body {
   }
 
   update(timeCoeff: number) {
-    this.vel.add(this.acc.copy().mult(timeCoeff))
-    this.pos.add(this.vel.copy().mult(timeCoeff).limit(10))
+    this.vel.add(this.acc.copy().mult(timeCoeff)).limit(3)
+    this.pos.add(this.vel.copy().mult(timeCoeff))
     this.acc.setMag(0)
   }
 
   goTo(target: Vector) {
     const targetRelative = target.copy().sub(this.pos)
 
-    const force = this.brain.predict([
-      ...targetRelative.toArr(),
-      ...this.vel.toArr(),
-    ])
+    const force = this.brain.predict([targetRelative.toArr(), this.vel.toArr()])
 
     this.applyForce(force)
   }

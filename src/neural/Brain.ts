@@ -16,13 +16,13 @@ export class Brain {
   createModel() {
     const model = tf.sequential()
     const hidden = tf.layers.dense({
-      units: 12,
-      inputShape: [4],
+      units: 8,
+      inputShape: [2],
       activation: 'sigmoid',
     })
     model.add(hidden)
     const output = tf.layers.dense({
-      units: 2,
+      units: 4,
       activation: 'sigmoid',
     })
     model.add(output)
@@ -37,14 +37,18 @@ export class Brain {
     this.model.dispose()
   }
 
-  predict(inputs: [number, number, number, number]) {
+  predict(inputs: [[number, number], [number, number]]) {
+    // predict(inputs: [number, number]) {
     const data = tf.tidy(() => {
-      const inputTensor = tf.tensor2d([inputs])
+      const inputTensor = tf.tensor2d(inputs)
       const output = this.model.predict(inputTensor) as tf.Tensor
       return output.dataSync()
     })
-    const x = data[0] * 2 - 1
-    const y = data[1] * 2 - 1
+    const [xVal, xDir, yVal, yDir] = data
+    const xDirDoubled = 2 * xDir
+    const yDirDoubled = 2 * yDir
+    const x = xVal * ((xDirDoubled - 1) / xDirDoubled)
+    const y = yVal * ((yDirDoubled - 1) / yDirDoubled)
     return new Vector(x, y)
   }
 
