@@ -5,7 +5,7 @@ import { drawProgress, drawZone, width, height } from '../graphics/canvas'
 import type { State } from './State'
 import { random } from '../utils'
 
-const getRandomPos = () =>
+const getRandomPosition = () =>
   new Vector(random(100, width - 100), random(100, height - 100))
 
 const diagonale = new Vector(width, height)
@@ -41,7 +41,7 @@ export class Population {
   }
 
   brandNewGuy() {
-    const guy = new Body({ pos: getRandomPos(), target: this.state.mouse })
+    const guy = new Body({ position: getRandomPosition(), target: this.state.mouse })
     return guy
   }
 
@@ -61,10 +61,10 @@ export class Population {
     while (++i < maxI) {
       const guy = guys[i]
 
-      const wentPath = guy.pos.copy().sub(mouse).mag()
+      const wentPath = guy.position.copy().sub(mouse).mag()
       const wentCoeff = wentPath / guy.rememberedTargetRange
       if (wentCoeff < 1.2 || wentPath < safeZone) {
-        const child = guy.makeChild(getRandomPos(), mouse)
+        const child = guy.makeChild(getRandomPosition(), mouse)
         smartGuys.push(child)
       }
       guy.brain.dispose()
